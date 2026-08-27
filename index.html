@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>aespa Wire</title>
+<meta name="google-site-verification" content="vPrPs6OsWEmsXfUWhN3NlBiR2PA809FQtUKL9N-EtT8" />
+<meta name="description" content="An independent, unofficial English-language wire for global MY — translated news, album reviews, official video curation, a world tour schedule converted to your timezone, and a fan quiz.">
+<meta property="og:title" content="aespa Wire">
+<meta property="og:description" content="An independent, unofficial English-language wire for global MY, tracking the LEMONADE era and the SYNK: COMPLÆXITY World Tour.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%93%A1%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --paper:#F4F8F9;
+    --paper-raised:#FFFFFF;
+    --ink:#0F1B21;
+    --ink-dim:#4C6068;
+    --ink-faint:#84959B;
+    --line:#DCE7EA;
+    --cyan:#00A9C7;
+    --cyan-deep:#00819A;
+    --cyan-tint:#CFF0F6;
+    --noir:#0F1B21;
+    --noir-deep:#000000;
+    --noir-tint:#E4EDEF;
+    --live:#2F7A4C;
+    --shadow: 0 1px 2px rgba(15,27,33,0.06), 0 10px 28px rgba(15,27,33,0.08);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#0B1416;
+      --paper-raised:#141F22;
+      --ink:#E9F4F6;
+      --ink-dim:#AFC5CA;
+      --ink-faint:#77898E;
+      --line:#293A3E;
+      --cyan:#3AD4F0;
+      --cyan-deep:#8CE7F7;
+      --cyan-tint:#123640;
+      --noir:#E9F4F6;
+      --noir-deep:#FFFFFF;
+      --noir-tint:#1C2B2F;
+      --live:#66CD8C;
+      --shadow: 0 1px 2px rgba(0,0,0,0.4), 0 14px 34px rgba(0,0,0,0.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0B1416;
+    --paper-raised:#141F22;
+    --ink:#E9F4F6;
+    --ink-dim:#AFC5CA;
+    --ink-faint:#77898E;
+    --line:#293A3E;
+    --cyan:#3AD4F0;
+    --cyan-deep:#8CE7F7;
+    --cyan-tint:#123640;
+    --noir:#E9F4F6;
+    --noir-deep:#FFFFFF;
+    --noir-tint:#1C2B2F;
+    --live:#66CD8C;
+    --shadow: 0 1px 2px rgba(0,0,0,0.4), 0 14px 34px rgba(0,0,0,0.5);
+  }
+
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Figtree', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  a{color:inherit;}
+  h1,h2,h3{font-family:'Fraunces', Georgia, 'Times New Roman', serif; font-weight:600; text-wrap:balance; margin:0;}
+  p{margin:0;}
+  .mono{font-family:'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace; font-variant-numeric:tabular-nums;}
+  .wrap{max-width:1080px; margin:0 auto; padding:0 clamp(1.25rem, 4vw, 2.5rem);}
+
+  a:focus-visible, button:focus-visible{outline:2px solid var(--cyan); outline-offset:3px; border-radius:4px;}
+
+  /* ---------- Masthead ---------- */
+  .masthead{position:sticky; top:0; z-index:20; background:var(--paper); border-bottom:1px solid var(--line);}
+  .masthead__top{
+    max-width:1080px; margin:0 auto; padding:0.9rem clamp(1.25rem, 4vw, 2.5rem) 0.7rem;
+    display:flex; align-items:baseline; justify-content:space-between; gap:1rem; flex-wrap:wrap;
+  }
+  .wordmark{font-family:'Fraunces', serif; font-weight:700; font-size:1.35rem; text-decoration:none; letter-spacing:-0.01em;}
+  .masthead__kicker{font-family:'IBM Plex Mono', monospace; font-size:0.68rem; letter-spacing:0.09em; text-transform:uppercase; color:var(--ink-faint);}
+  .ticker{border-top:1px solid var(--line); background:var(--cyan-tint); overflow:hidden; white-space:nowrap;}
+  .ticker__track{display:inline-flex; gap:2.5rem; padding:0.45rem clamp(1.25rem, 4vw, 2.5rem); animation:ticker 32s linear infinite;}
+  .ticker__track span{font-family:'IBM Plex Mono', monospace; font-size:0.72rem; letter-spacing:0.03em; color:var(--cyan-deep); font-weight:500;}
+  @keyframes ticker{from{transform:translateX(0);} to{transform:translateX(-50%);}}
+  @media (prefers-reduced-motion: reduce){ .ticker__track{animation:none;} }
+
+  /* ---------- Hero ---------- */
+  .hero{padding:clamp(2.75rem,7vw,5.5rem) 0 clamp(2.5rem,6vw,4rem);}
+  .dateline{font-family:'IBM Plex Mono', monospace; font-size:0.75rem; letter-spacing:0.1em; color:var(--noir); font-weight:600;}
+  .hero h1{font-size:clamp(2.4rem, 6vw, 4.2rem); line-height:1.02; margin-top:0.6rem; letter-spacing:-0.02em;}
+  .hero__sub{max-width:42rem; margin-top:1.25rem; font-size:1.08rem; color:var(--ink-dim); max-width:60ch;}
+  .hero__meta{margin-top:1.4rem; font-family:'IBM Plex Mono', monospace; font-size:0.72rem; color:var(--ink-faint); display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;}
+  .tag{display:inline-block; font-family:'IBM Plex Mono', monospace; font-size:0.62rem; letter-spacing:0.08em; text-transform:uppercase; padding:0.2rem 0.5rem; border-radius:3px; font-weight:600;}
+  .tag--sample{background:var(--noir-tint); color:var(--ink-dim);}
+  .tag--live{background:var(--cyan-tint); color:var(--cyan-deep);}
+  .hero__actions{margin-top:2rem; display:flex; gap:0.9rem; flex-wrap:wrap;}
+  .btn{display:inline-flex; align-items:center; gap:0.4rem; padding:0.75rem 1.3rem; border-radius:3px; text-decoration:none; font-weight:600; font-size:0.92rem; border:1px solid transparent; transition:transform .15s ease, background .15s ease;}
+  .btn--primary{background:var(--cyan); color:#fff;}
+  .btn--primary:hover{background:var(--cyan-deep); transform:translateY(-1px);}
+  .btn--ghost{border-color:var(--line); color:var(--ink);}
+  .btn--ghost:hover{border-color:var(--cyan); color:var(--cyan-deep);}
+
+  /* ---------- Section scaffolding ---------- */
+  .section-label{font-family:'IBM Plex Mono', monospace; font-size:0.72rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:0.9rem;}
+  .desk-section{padding:clamp(2.75rem,6vw,4.5rem) 0; border-top:1px solid var(--line);}
+  .desk-section--alt{background:var(--paper-raised);}
+  .desk-head{display:flex; justify-content:space-between; align-items:flex-end; gap:1.5rem; flex-wrap:wrap; margin-bottom:2rem;}
+  .desk-head h2{font-size:clamp(1.6rem,3.4vw,2.1rem);}
+  .desk-note{max-width:34ch; font-size:0.88rem; color:var(--ink-dim);}
+
+  /* ---------- Desk grid ---------- */
+  .desks{padding:clamp(2.5rem,6vw,4rem) 0 0;}
+  .desk-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(230px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:6px; overflow:hidden;}
+  .desk-card{background:var(--paper-raised); padding:1.5rem; text-decoration:none; color:var(--ink); display:flex; flex-direction:column; gap:0.8rem; transition:background .15s ease;}
+  .desk-card:hover{background:var(--cyan-tint);}
+  .desk-card__num{font-family:'IBM Plex Mono', monospace; font-size:0.72rem; color:var(--noir); font-weight:600; letter-spacing:0.06em;}
+  .desk-card svg{width:26px; height:26px; stroke:var(--cyan); fill:none; stroke-width:1.6;}
+  .desk-card h3{font-size:1.05rem; font-weight:600;}
+  .desk-card p{font-size:0.86rem; color:var(--ink-dim);}
+
+  /* ---------- News desk ---------- */
+  .dispatch-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:1.5rem;}
+  .dispatch{background:var(--paper-raised); border:1px solid var(--line); border-radius:6px; padding:1.4rem; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:0.7rem;}
+  .dispatch__eyebrow{display:flex; justify-content:space-between; align-items:center; font-family:'IBM Plex Mono', monospace; font-size:0.66rem; color:var(--ink-faint); letter-spacing:0.05em;}
+  .dispatch h3{font-size:1.1rem; line-height:1.3;}
+  .dispatch p{font-size:0.9rem; color:var(--ink-dim);}
+  .dispatch__credit{font-size:0.76rem; color:var(--ink-faint); border-top:1px dashed var(--line); padding-top:0.7rem; margin-top:0.2rem;}
+  .dispatch__link{font-size:0.82rem; font-weight:600; color:var(--cyan-deep); text-decoration:none;}
+  .dispatch__link:hover{text-decoration:underline;}
+
+  /* ---------- Review desk ---------- */
+  .review{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.4fr); gap:2.5rem; align-items:start;}
+  .review__stamp{border:1px solid var(--noir); color:var(--noir); font-family:'IBM Plex Mono', monospace; font-size:0.72rem; letter-spacing:0.1em; padding:0.85rem 1rem; border-radius:4px; text-align:center;}
+  .review__stamp .score{display:block; font-size:1.6rem; color:var(--ink); font-weight:600; margin-bottom:0.15rem;}
+  .review blockquote{font-family:'Fraunces', serif; font-style:italic; font-size:clamp(1.2rem,2.4vw,1.55rem); line-height:1.4; margin:0 0 1rem; color:var(--ink);}
+  .review__body p{color:var(--ink-dim); font-size:0.95rem; margin-bottom:0.9rem;}
+  .tracklist{list-style:none; margin:0 0 1rem; padding:0; font-family:'IBM Plex Mono', monospace; font-size:0.82rem; color:var(--ink-dim); display:grid; gap:0.35rem;}
+  .tracklist li{display:flex; gap:0.6rem;}
+  .tracklist span.n{color:var(--ink-faint); width:1.4rem; flex-shrink:0;}
+  .tracklist li.title-track{color:var(--cyan-deep); font-weight:600;}
+  @media (max-width: 720px){ .review{grid-template-columns:1fr;} .review__stamp{width:fit-content;} }
+
+  /* ---------- Screening room ---------- */
+  .screen-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:1.5rem;}
+  .screen-card{background:var(--paper-raised); border:1px solid var(--line); border-radius:6px; overflow:hidden; box-shadow:var(--shadow);}
+  .screen-card__frame{position:relative; aspect-ratio:16/9; background:#000;}
+  .screen-card__frame iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
+  .screen-card__placeholder{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.6rem; color:var(--ink-faint); background:var(--cyan-tint);}
+  .screen-card__placeholder svg{width:34px; height:34px; stroke:var(--cyan); fill:none; stroke-width:1.5;}
+  .screen-card__body{padding:1.1rem 1.3rem;}
+  .screen-card__body h3{font-size:0.98rem; margin-bottom:0.35rem;}
+  .screen-card__body p{font-size:0.84rem; color:var(--ink-dim);}
+
+  /* ---------- Signal desk ---------- */
+  .signal-list{display:flex; flex-direction:column; border:1px solid var(--line); border-radius:6px; overflow:hidden; background:var(--paper-raised);}
+  .signal-row{display:grid; grid-template-columns:1fr auto; gap:1rem; align-items:center; padding:1.1rem 1.4rem; border-top:1px solid var(--line);}
+  .signal-row:first-child{border-top:none;}
+  .signal-row__name{font-weight:600; font-size:0.98rem;}
+  .signal-row__meta{font-family:'IBM Plex Mono', monospace; font-size:0.72rem; color:var(--ink-faint); margin-top:0.25rem;}
+  .signal-row__countdown{font-family:'IBM Plex Mono', monospace; font-size:0.95rem; font-weight:600; color:var(--cyan-deep); text-align:right; white-space:nowrap;}
+  .signal-row__countdown small{display:block; font-size:0.62rem; font-weight:500; color:var(--ink-faint); text-transform:uppercase; letter-spacing:0.06em;}
+  .signal-footnote{margin-top:1rem; font-size:0.78rem; color:var(--ink-faint);}
+  @media (max-width:560px){ .signal-row{grid-template-columns:1fr;} .signal-row__countdown{text-align:left;} }
+
+  /* ---------- Quiz desk ---------- */
+  .quiz-panel{background:var(--paper-raised); border:1px solid var(--line); border-radius:6px; padding:clamp(1.5rem,3vw,2.25rem); box-shadow:var(--shadow); max-width:640px;}
+  .quiz-progress{font-family:'IBM Plex Mono', monospace; font-size:0.7rem; color:var(--ink-faint); margin-bottom:0.6rem; letter-spacing:0.05em;}
+  .quiz-question{font-size:1.2rem; margin-bottom:1.1rem;}
+  .quiz-options{display:grid; gap:0.6rem;}
+  .quiz-option{text-align:left; padding:0.8rem 1rem; border:1px solid var(--line); border-radius:5px; background:transparent; color:var(--ink); font-family:inherit; font-size:0.92rem; cursor:pointer; transition:border-color .15s ease, background .15s ease;}
+  .quiz-option:hover{border-color:var(--cyan); background:var(--cyan-tint);}
+  .quiz-result{display:none;}
+  .quiz-result.is-active{display:block;}
+  .quiz-question-wrap.is-hidden{display:none;}
+  .quiz-result__title{font-size:1.4rem; margin-bottom:0.6rem;}
+  .quiz-result__body{color:var(--ink-dim); font-size:0.95rem; margin-bottom:1rem;}
+  .quiz-result__track{font-family:'IBM Plex Mono', monospace; font-size:0.78rem; color:var(--noir); margin-bottom:1.2rem;}
+  .quiz-reset{font-size:0.85rem; font-weight:600; color:var(--cyan-deep); background:none; border:none; cursor:pointer; padding:0; font-family:inherit;}
+  .quiz-reset:hover{text-decoration:underline;}
+
+  /* ---------- Market desk ---------- */
+  .market-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(230px,1fr)); gap:1.4rem;}
+  .market-card{background:var(--paper-raised); border:1px solid var(--line); border-radius:6px; padding:1.3rem; display:flex; flex-direction:column; gap:0.6rem; box-shadow:var(--shadow);}
+  .market-card h3{font-size:1.02rem;}
+  .market-card p{font-size:0.85rem; color:var(--ink-dim);}
+  .market-card a{font-size:0.85rem; font-weight:600; color:var(--cyan-deep); text-decoration:none;}
+  .market-card a:hover{text-decoration:underline;}
+
+  /* ---------- Footer / colophon ---------- */
+  .colophon{border-top:1px solid var(--line); background:var(--paper-raised); padding:clamp(2.5rem,5vw,3.5rem) 0 2.5rem;}
+  .colophon__grid{display:grid; grid-template-columns:1.1fr 1.4fr; gap:2.5rem;}
+  .colophon .wordmark{font-size:1.15rem;}
+  .colophon p{font-size:0.82rem; color:var(--ink-dim); margin-top:0.9rem; max-width:46ch;}
+  .colophon__fine{font-size:0.72rem; color:var(--ink-faint); margin-top:1.5rem; font-family:'IBM Plex Mono', monospace; line-height:1.6;}
+  @media (max-width:720px){ .colophon__grid{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <header class="masthead" id="top">
+    <div class="masthead__top">
+      <a class="wordmark" href="#top">aespa Wire</a>
+      <span class="masthead__kicker">Unofficial MY Dispatch · English Edition</span>
+    </div>
+    <div class="ticker" aria-label="Latest wire headlines">
+      <div class="ticker__track">
+        <span>"LEMONADE" DEBUTS AT #1 ON CIRCLE CHART, #15 ON BILLBOARD 200</span>
+        <span>SYNK: COMPLÆXITY WORLD TOUR ADDS 26 SHOWS ACROSS 4 CONTINENTS</span>
+        <span>WINTER GOES ROCK WITH SOLO SINGLE "SPEED OF SUMMER," OUT AUG 28</span>
+        <span>FULL TRACKLIST: WDA (FEAT. G-DRAGON) · LEMONADE · SHAKIN' · SWITCHBLADE · MORE</span>
+        <span>"LEMONADE" DEBUTS AT #1 ON CIRCLE CHART, #15 ON BILLBOARD 200</span>
+        <span>SYNK: COMPLÆXITY WORLD TOUR ADDS 26 SHOWS ACROSS 4 CONTINENTS</span>
+        <span>WINTER GOES ROCK WITH SOLO SINGLE "SPEED OF SUMMER," OUT AUG 28</span>
+        <span>FULL TRACKLIST: WDA (FEAT. G-DRAGON) · LEMONADE · SHAKIN' · SWITCHBLADE · MORE</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero wrap">
+      <p class="dateline">SEOUL — AUGUST 2026</p>
+      <h1>Four voices,<br>one synced world.</h1>
+      <p class="hero__sub">aespa closed out May with their second full album, <em>LEMONADE</em> — eleven tracks that debuted at No. 1 on Korea's Circle Chart and cracked the Billboard 200 — then spent the summer on the road with the SYNK: COMPLÆXITY World Tour, a 26-show run that opened at Lollapalooza and Seoul's Gocheok Sky Dome before heading to the Americas and Europe. This page is a working build of how <strong>aespa Wire</strong> carries that story to English-speaking MY — translated, sourced, and converted to whatever timezone you're reading from.</p>
+      <p class="hero__meta">DISPATCH NO. 0001 · FILED 09:00 KST · <span class="tag tag--live">LEMONADE Era · 2026</span></p>
+      <div class="hero__actions">
+        <a class="btn btn--primary" href="#desks">Enter the wire room ↓</a>
+        <a class="btn btn--ghost" href="#about">What is this?</a>
+      </div>
+    </section>
+
+    <section class="desks wrap" id="desks">
+      <p class="section-label">The desks</p>
+      <div class="desk-grid">
+        <a class="desk-card" href="#news">
+          <span class="desk-card__num">DESK 01</span>
+          <svg viewBox="0 0 24 24"><path d="M4 4h13a2 2 0 0 1 2 2v13a1 1 0 0 1-1 1H6a2 2 0 0 1-2-2V4Z"/><path d="M17 4v14a2 2 0 0 0 2 2h1"/><path d="M7 8h8M7 12h8M7 16h5"/></svg>
+          <h3>News Desk</h3>
+          <p>Korean and English coverage, translated and summarized — always credited back to the original outlet.</p>
+        </a>
+        <a class="desk-card" href="#reviews">
+          <span class="desk-card__num">DESK 02</span>
+          <svg viewBox="0 0 24 24"><path d="M12 3l2.4 5.1 5.6.6-4.2 3.8 1.2 5.5L12 15.8 6.9 18l1.3-5.5-4.2-3.8 5.6-.6L12 3Z"/></svg>
+          <h3>Review Desk</h3>
+          <p>Track-by-track reads on every era, from <em>Black Mamba</em> to whatever's coming next.</p>
+        </a>
+        <a class="desk-card" href="#screening">
+          <span class="desk-card__num">DESK 03</span>
+          <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9.5v5l4.5-2.5-4.5-2.5Z"/></svg>
+          <h3>Screening Room</h3>
+          <p>Official videos only, curated and embedded — never reuploaded.</p>
+        </a>
+        <a class="desk-card" href="#signal">
+          <span class="desk-card__num">DESK 04</span>
+          <svg viewBox="0 0 24 24"><path d="M12 20v-6"/><path d="M8.5 17.5a5 5 0 0 1 0-9"/><path d="M4.5 20a10 10 0 0 1 0-16"/><path d="M15.5 17.5a5 5 0 0 0 0-9"/><path d="M19.5 20a10 10 0 0 0 0-16"/><circle cx="12" cy="12" r="1.4"/></svg>
+          <h3>Signal Desk</h3>
+          <p>A world tour and release calendar, converted into whatever timezone you're in.</p>
+        </a>
+        <a class="desk-card" href="#quiz">
+          <span class="desk-card__num">DESK 05</span>
+          <svg viewBox="0 0 24 24"><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-1 .5-1.5 1.1-1.5 2.2"/><circle cx="12" cy="17.5" r="0.9" fill="var(--cyan)"/><circle cx="12" cy="12" r="9"/></svg>
+          <h3>Quiz Desk</h3>
+          <p>Quick, shareable quizzes built for the group chat, not the algorithm.</p>
+        </a>
+        <a class="desk-card" href="#market">
+          <span class="desk-card__num">DESK 06</span>
+          <svg viewBox="0 0 24 24"><path d="M6 8h12l-1 12H7L6 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+          <h3>Market Desk</h3>
+          <p>Where to buy official merch and tickets abroad, without the guesswork.</p>
+        </a>
+      </div>
+    </section>
+
+    <section class="desk-section" id="news">
+      <div class="wrap">
+        <div class="desk-head">
+          <div>
+            <p class="section-label">Desk 01 · News</p>
+            <h2>Translated for the timeline you don't read.</h2>
+          </div>
+          <p class="desk-note">Every dispatch below links back to its original source, Korean or otherwise — this desk summarizes, it doesn't replace.</p>
+        </div>
+        <div class="dispatch-grid">
+          <article class="dispatch">
+            <p class="dispatch__eyebrow"><span>SEOUL — AUG 27</span></p>
+            <h3>Winter turns to rock for solo single "Speed of Summer"</h3>
+            <p>The aespa vocalist steps outside the group's synth-pop lane for an alternative punk-rock track made with digital media channel Dingo, released August 28. Korean press described it as capturing "a moment of freedom speeding through a summer night with the radio on full volume" — a stretch for Winter's usual clean, high vocal range.</p>
+            <p class="dispatch__credit">Summarized from The Korea Herald by aespa Wire staff.</p>
+            <a class="dispatch__link" href="https://www.koreaherald.com/article/10853989" target="_blank" rel="noopener">Read the original source ↗</a>
+          </article>
+          <article class="dispatch">
+            <p class="dispatch__eyebrow"><span>CHICAGO — AUG 2</span></p>
+            <h3>aespa make their Lollapalooza debut in the rain, with a Ty Dolla $ign surprise</h3>
+            <p>The group's first appearance at the festival ran through heavy rain at Grant Park, with a surprise guest turn from Ty Dolla $ign on "Switchblade." In interviews around the show, Ningning and Giselle spoke about the difficulty of showing who they really are inside K-pop idol life — even as their music, they said, is "something that only aespa can do."</p>
+            <p class="dispatch__credit">Summarized from The FADER by aespa Wire staff.</p>
+            <a class="dispatch__link" href="https://www.thefader.com/2026/08/10/aespa-lollapalooza-lemonade-favorite-music-interview" target="_blank" rel="noopener">Read the original source ↗</a>
+          </article>
+          <article class="dispatch">
+            <p class="dispatch__eyebrow"><span>SEOUL — APR 27</span></p>
+            <h3>Group unveils SYNK: COMPLÆXITY, a 26-show world tour across four continents</h3>
+            <p>Tied to the upcoming <em>LEMONADE</em> album cycle, the newly announced run opens in Asia in August before crossing into South America, North America, the UK, and continental Europe through February 2027 — one of the largest tour footprints the group has staged to date.</p>
+            <p class="dispatch__credit">Summarized from Consequence by aespa Wire staff.</p>
+            <a class="dispatch__link" href="https://consequence.net/2026/04/aespa-world-tour-2026-2027/" target="_blank" rel="noopener">Read the original source ↗</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="desk-section desk-section--alt" id="reviews">
+      <div class="wrap">
+        <div class="desk-head">
+          <div>
+            <p class="section-label">Desk 02 · Review</p>
+            <h2>Revisiting the catalogue, track by track.</h2>
+          </div>
+          <p class="desk-note">Text only, always — no reposted photos or video frames on this desk.</p>
+        </div>
+        <div class="review">
+          <div class="review__stamp"><span class="score">4.3 / 5</span>EDITOR'S STAMP</div>
+          <div class="review__body">
+            <blockquote>"LEMONADE is aespa treating genre as a costume change — pop-rock one track, hip-hop the next, a doo-wop wind-up-doll hook two songs later — and somehow still sounding like one group the whole way through."</blockquote>
+            <p><strong>LEMONADE (2026): eleven tracks, two features, and a second full album that debuted at No. 1 on Korea's Circle Chart.</strong> The set opens with pre-release single "WDA (Whole Different Animal)," a hip-hop-leaning collaboration with G-DRAGON, before the title track needle-drops into a brighter, hookier register than the group's usual maximalist production.</p>
+            <p>Standouts include "Camouflage," built around vocal-experimentation the group has singled out as a personal favorite, and "My Plan," which folds a wind-up-doll sound effect into its bridge. The album closes with a bonus duet version of the title track featuring Becky G. It went on to chart at No. 2 on Japan's Oricon, No. 1 in Spain, and No. 15 on the Billboard 200.</p>
+            <ul class="tracklist">
+              <li><span class="n mono">01</span> WDA (Whole Different Animal) (feat. G-DRAGON)</li>
+              <li class="title-track"><span class="n mono">02</span> Lemonade · Title Track</li>
+              <li><span class="n mono">03</span> Shakin'</li>
+              <li><span class="n mono">04</span> Can't Help Myself</li>
+              <li><span class="n mono">05</span> Camouflage</li>
+              <li><span class="n mono">06</span> Bite</li>
+              <li><span class="n mono">07</span> Switchblade (feat. Ty Dolla $ign)</li>
+              <li><span class="n mono">08</span> Roll</li>
+              <li><span class="n mono">09</span> My Plan</li>
+              <li><span class="n mono">10</span> 'Til We Die</li>
+              <li><span class="n mono">11</span> Lemonade (feat. Becky G)</li>
+            </ul>
+            <a class="dispatch__link" href="https://en.wikipedia.org/wiki/Lemonade_(Aespa_album)" target="_blank" rel="noopener">Read the full chart-performance breakdown →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="desk-section" id="screening">
+      <div class="wrap">
+        <div class="desk-head">
+          <div>
+            <p class="section-label">Desk 03 · Screening Room</p>
+            <h2>Only what SMTOWN's own channel actually published.</h2>
+          </div>
+          <p class="desk-note">Every clip here is an official YouTube embed, verified against SM Entertainment's SMTOWN channel. If it isn't published there, it doesn't play on this desk.</p>
+        </div>
+        <div class="screen-grid">
+          <div class="screen-card">
+            <div class="screen-card__frame">
+              <iframe src="https://www.youtube.com/embed/83C3TZ4Zm_o" title="aespa &quot;Lemonade&quot; Official M/V" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="screen-card__body">
+              <h3>"Lemonade" — Official M/V</h3>
+              <p>The title track from aespa's second full album, embedded directly from SMTOWN's channel. This is the only way video appears on aespa Wire — no downloads, no reuploads.</p>
+            </div>
+          </div>
+          <div class="screen-card">
+            <div class="screen-card__frame">
+              <iframe src="https://www.youtube.com/embed/iTJSbJtS8MU" title="aespa &quot;WDA (Whole Different Animal)&quot; feat. G-DRAGON Official M/V" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="screen-card__body">
+              <h3>"WDA (Whole Different Animal)" feat. G-DRAGON — Official M/V</h3>
+              <p>The pre-release single that opened the <em>LEMONADE</em> era, a hip-hop-leaning collaboration released ahead of the full album.</p>
+            </div>
+          </div>
+          <div class="screen-card">
+            <div class="screen-card__frame">
+              <div class="screen-card__placeholder">
+                <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9.5v5l4.5-2.5-4.5-2.5Z"/></svg>
+                <span class="tag tag--sample">Slot reserved</span>
+              </div>
+            </div>
+            <div class="screen-card__body">
+              <h3>Weekly stage pick</h3>
+              <p>A recurring slot for the best officially uploaded SYNK: COMPLÆXITY tour stage or performance of the week, added only once the source channel is confirmed.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="desk-section desk-section--alt" id="signal">
+      <div class="wrap">
+        <div class="desk-head">
+          <div>
+            <p class="section-label">Desk 04 · Signal</p>
+            <h2>Converted to your clock, automatically.</h2>
+          </div>
+          <p class="desk-note">Dates below are as announced to date; exact show times are estimated where the official notice only confirmed a date, and flagged accordingly.</p>
+        </div>
+        <div class="signal-list" id="signalList">
+          <div class="signal-row" data-target="2026-08-28T18:00:00+09:00">
+            <div>
+              <p class="signal-row__name">Winter — "Speed of Summer" solo single <span class="tag tag--live">Confirmed date</span></p>
+              <p class="signal-row__meta mono">~6:00 PM KST (estimated) · <span class="local-time">—</span></p>
+            </div>
+            <div class="signal-row__countdown mono"><span class="countdown-value">—</span><small>time left</small></div>
+          </div>
+          <div class="signal-row" data-target="2026-09-04T19:00:00-03:00">
+            <div>
+              <p class="signal-row__name">SYNK: COMPLÆXITY — São Paulo, Mercado Livre Arena Pacaembu <span class="tag tag--sample">Estimated time</span></p>
+              <p class="signal-row__meta mono">~7:00 PM local (estimated) · <span class="local-time">—</span></p>
+            </div>
+            <div class="signal-row__countdown mono"><span class="countdown-value">—</span><small>time left</small></div>
+          </div>
+          <div class="signal-row" data-target="2026-10-03T19:00:00-07:00">
+            <div>
+              <p class="signal-row__name">SYNK: COMPLÆXITY — Los Angeles, Intuit Dome <span class="tag tag--sample">Estimated time</span></p>
+              <p class="signal-row__meta mono">~7:00 PM local (estimated) · <span class="local-time">—</span></p>
+            </div>
+            <div class="signal-row__countdown mono"><span class="countdown-value">—</span><small>time left</small></div>
+          </div>
+        </div>
+        <p class="signal-footnote">Detected timezone: <span class="mono" id="detectedTz">—</span> · Full tour rundown: <a class="dispatch__link" href="https://en.wikipedia.org/wiki/Synk:_Complaexity" target="_blank" rel="noopener">stop-by-stop ↗</a></p>
+      </div>
+    </section>
+
+    <section class="desk-section" id="quiz">
+      <div class="wrap">
+        <div class="desk-head">
+          <div>
+            <p class="section-label">Desk 05 · Quiz</p>
+            <h2>Which era matches your mood tonight?</h2>
+          </div>
+          <p class="desk-note">Three questions, no email required — built to demonstrate the interaction, not to collect data.</p>
+        </div>
+
+        <div class="quiz-panel">
+          <div class="quiz-body" id="quizBody">
+            <div class="quiz-question-wrap" data-q="0">
+              <p class="quiz-progress">QUESTION 1 / 3</p>
+              <p class="quiz-question">Pick a late-night activity.</p>
+              <div class="quiz-options">
+                <button class="quiz-option" data-era="debut">Rewatching the "Black Mamba" debut stage on loop</button>
+                <button class="quiz-option" data-era="savage">Queuing up "Next Level" and "Savage" back to back</button>
+                <button class="quiz-option" data-era="armageddon">Blasting "Supernova" and "Whiplash" at full volume</button>
+                <button class="quiz-option" data-era="lemonade">Running the LEMONADE tracklist front to back</button>
+              </div>
+            </div>
+            <div class="quiz-question-wrap is-hidden" data-q="1">
+              <p class="quiz-progress">QUESTION 2 / 3</p>
+              <p class="quiz-question">Pick a concept.</p>
+              <div class="quiz-options">
+                <button class="quiz-option" data-era="debut">A rookie group meeting their digital æ-selves for the first time</button>
+                <button class="quiz-option" data-era="savage">A world-ending glitch with a chorus built to survive it</button>
+                <button class="quiz-option" data-era="armageddon">Full sci-fi spectacle, apocalypse as a dance floor</button>
+                <button class="quiz-option" data-era="lemonade">Genre whiplash on purpose, no interest in staying in one lane</button>
+              </div>
+            </div>
+            <div class="quiz-question-wrap is-hidden" data-q="2">
+              <p class="quiz-progress">QUESTION 3 / 3</p>
+              <p class="quiz-question">Pick a feeling you want from a comeback.</p>
+              <div class="quiz-options">
+                <button class="quiz-option" data-era="debut">Curiosity</button>
+                <button class="quiz-option" data-era="savage">Chaos</button>
+                <button class="quiz-option" data-era="armageddon">Scale</button>
+                <button class="quiz-option" data-era="lemonade">Playfulness</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="quiz-result" id="quizResult">
+            <p class="quiz-progress">RESULT</p>
+            <h3 class="quiz-result__title" id="resultTitle"></h3>
+            <p class="quiz-result__body" id="resultBody"></p>
+            <p class="quiz-result__track mono" id="resultTrack"></p>
+            <button class="quiz-reset" id="quizReset">Take it again ↺</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="desk-section desk-section--alt" id="market">
+      <div class="wrap">
+        <div class="desk-head">
+          <div>
+            <p class="section-label">Desk 06 · Market</p>
+            <h2>Buying official, from outside Korea.</h2>
+          </div>
+          <p class="desk-note">Links go to official storefronts. On the live site, tagged links here are where affiliate revenue would come from.</p>
+        </div>
+        <div class="market-grid">
+          <div class="market-card">
+            <h3>SMTOWN &amp;STORE</h3>
+            <p><em>LEMONADE</em> album versions, photocards, and official merch, with international shipping.</p>
+            <a href="https://smtownandstore.com" target="_blank" rel="noopener">Visit store ↗ <span class="tag tag--sample" style="margin-left:.3rem;">Affiliate link (example)</span></a>
+          </div>
+          <div class="market-card">
+            <h3>Weverse Shop</h3>
+            <p>Tour merch and album formats as each stop lands, shipped worldwide.</p>
+            <a href="https://weverseshop.io" target="_blank" rel="noopener">Visit store ↗ <span class="tag tag--sample" style="margin-left:.3rem;">Affiliate link (example)</span></a>
+          </div>
+          <div class="market-card">
+            <h3>SYNK: COMPLÆXITY tour dates</h3>
+            <p>Official notices and ticket links are posted stop-by-stop as each city goes on sale.</p>
+            <a href="https://aespaworldtour.com" target="_blank" rel="noopener">See official notices ↗</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="colophon" id="about">
+    <div class="wrap colophon__grid">
+      <div>
+        <a class="wordmark" href="#top">aespa Wire</a>
+        <p>An independent, unofficial wire for English-speaking MY — built to translate, schedule, and curate, never to reproduce.</p>
+      </div>
+      <div>
+        <p>aespa Wire is an independent fan project. It is not affiliated with, endorsed by, or sponsored by SM Entertainment or the members of aespa. All trademarks and copyrighted material belong to their respective owners. Video appears exclusively through official YouTube embeds and is never re-hosted; no third-party photography appears on this page.</p>
+        <p class="colophon__fine">PROTOTYPE BUILD — News Desk items, the LEMONADE review, and Signal Desk tour dates are compiled from public reporting as of August 2026 and linked to their original sources; this page itself is not yet a live, continuously-updated site. Dates marked "estimated" have not been confirmed down to the hour by an official announcement. Verify dates and prices with the artist's official channel or store before buying anything.</p>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script>
+  // ---- Signal desk: live countdowns + local time conversion ----
+  (function(){
+    var tzEl = document.getElementById('detectedTz');
+    var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (tzEl) tzEl.textContent = tz;
+
+    var rows = document.querySelectorAll('.signal-row');
+    rows.forEach(function(row){
+      var target = new Date(row.getAttribute('data-target'));
+      var localEl = row.querySelector('.local-time');
+      if (localEl){
+        localEl.textContent = target.toLocaleString(undefined, {dateStyle:'medium', timeStyle:'short'});
+      }
+      var cdEl = row.querySelector('.countdown-value');
+      function tick(){
+        var now = new Date();
+        var diff = target - now;
+        if (diff <= 0){ cdEl.textContent = 'now'; return; }
+        var d = Math.floor(diff / 86400000);
+        var h = Math.floor((diff % 86400000) / 3600000);
+        var m = Math.floor((diff % 3600000) / 60000);
+        var s = Math.floor((diff % 60000) / 1000);
+        cdEl.textContent = d + 'd ' + String(h).padStart(2,'0') + 'h ' + String(m).padStart(2,'0') + 'm ' + String(s).padStart(2,'0') + 's';
+      }
+      tick();
+      setInterval(tick, 1000);
+    });
+  })();
+
+  // ---- Quiz desk ----
+  (function(){
+    var scores = {debut:0, savage:0, armageddon:0, lemonade:0};
+    var qWraps = Array.prototype.slice.call(document.querySelectorAll('.quiz-question-wrap'));
+    var resultPanel = document.getElementById('quizResult');
+    var resultTitle = document.getElementById('resultTitle');
+    var resultBody = document.getElementById('resultBody');
+    var resultTrack = document.getElementById('resultTrack');
+    var resetBtn = document.getElementById('quizReset');
+
+    var results = {
+      debut: {
+        title: "You're a Black Mamba heart.",
+        body: "You want the group at its origin — four rookies and their digital æ-selves meeting for the first time, and a concept nobody else in K-pop was trying yet.",
+        track: "Starter track: “Black Mamba”"
+      },
+      savage: {
+        title: "Savage / Next Level is your frequency.",
+        body: "Sharp, maximalist, and built around a world-ending glitch — you want the hook that turned a metaverse concept into an actual chart run.",
+        track: "Starter track: “Next Level”"
+      },
+      armageddon: {
+        title: "You're deep in the Armageddon era.",
+        body: "You came for the scale — full sci-fi spectacle, apocalypse as a dance floor, and a chorus built to survive both.",
+        track: "Starter track: “Supernova”"
+      },
+      lemonade: {
+        title: "You're tuned to right now — the LEMONADE era.",
+        body: "You want genre whiplash on purpose and no interest in staying in one lane. Playful, a little unpredictable — exactly the mode this cycle is in.",
+        track: "Starter track: “Lemonade”"
+      }
+    };
+
+    document.getElementById('quizBody').addEventListener('click', function(e){
+      var btn = e.target.closest('.quiz-option');
+      if (!btn) return;
+      var era = btn.getAttribute('data-era');
+      scores[era]++;
+      var currentWrap = btn.closest('.quiz-question-wrap');
+      var idx = qWraps.indexOf(currentWrap);
+      currentWrap.classList.add('is-hidden');
+      if (qWraps[idx+1]){
+        qWraps[idx+1].classList.remove('is-hidden');
+      } else {
+        var winner = Object.keys(scores).reduce(function(a,b){ return scores[a] >= scores[b] ? a : b; });
+        var r = results[winner];
+        resultTitle.textContent = r.title;
+        resultBody.textContent = r.body;
+        resultTrack.textContent = r.track;
+        resultPanel.classList.add('is-active');
+      }
+    });
+
+    resetBtn.addEventListener('click', function(){
+      scores = {debut:0, savage:0, armageddon:0, lemonade:0};
+      qWraps.forEach(function(w, i){ w.classList.toggle('is-hidden', i !== 0); });
+      resultPanel.classList.remove('is-active');
+    });
+  })();
+</script>
+</body>
+</html>
